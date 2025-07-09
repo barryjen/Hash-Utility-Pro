@@ -35,7 +35,7 @@ export default function HashUtility() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Hash Utility Pro</h1>
-                <p className="text-sm text-gray-600">Comprehensive Cryptographic Hash Toolkit</p>
+                <p className="text-sm text-gray-600">Cryptographic Toolkit</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
