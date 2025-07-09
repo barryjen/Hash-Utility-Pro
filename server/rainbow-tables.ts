@@ -9,10 +9,13 @@ export interface RainbowTableEntry {
 
 export class RainbowTableService {
   private rainbowTables: Map<string, Map<string, string>>;
+  private dynamicEntries: Map<string, Map<string, string>>;
 
   constructor() {
     this.rainbowTables = new Map();
+    this.dynamicEntries = new Map();
     this.initializeRainbowTables();
+    this.initializeDynamicTables();
   }
 
   private initializeRainbowTables() {
@@ -124,6 +127,14 @@ export class RainbowTableService {
     console.log(`Rainbow tables initialized with ${uniquePasswords.length} entries per hash type`);
   }
 
+  private initializeDynamicTables() {
+    // Initialize empty dynamic tables for each hash type
+    this.dynamicEntries.set('md5', new Map());
+    this.dynamicEntries.set('sha1', new Map());
+    this.dynamicEntries.set('sha256', new Map());
+    this.dynamicEntries.set('sha512', new Map());
+  }
+
   private generateHashTable(hashType: string, passwords: string[]) {
     const hashMap = new Map<string, string>();
 
@@ -157,12 +168,30 @@ export class RainbowTableService {
     this.rainbowTables.set(hashType, hashMap);
   }
 
+  public learnHash(originalText: string, hashType: string, hashValue: string) {
+    const normalizedHash = hashValue.toLowerCase().trim();
+    const dynamicTable = this.dynamicEntries.get(hashType);
+    
+    if (dynamicTable && !dynamicTable.has(normalizedHash)) {
+      dynamicTable.set(normalizedHash, originalText);
+      console.log(`Learned new ${hashType} hash: ${normalizedHash} -> ${originalText}`);
+    }
+  }
+
   public lookupHash(hash: string): RainbowTableEntry | null {
     const normalizedHash = hash.toLowerCase().trim();
     const hashType = this.detectHashType(normalizedHash);
 
     if (hashType === 'unknown') {
-      // Try all hash types
+      // Try all hash types - check dynamic tables first
+      for (const [type, dynamicMap] of this.dynamicEntries) {
+        const original = dynamicMap.get(normalizedHash);
+        if (original) {
+          return { hash: normalizedHash, original, hashType: type };
+        }
+      }
+      
+      // Then check static rainbow tables
       for (const [type, hashMap] of this.rainbowTables) {
         const original = hashMap.get(normalizedHash);
         if (original) {
@@ -172,6 +201,16 @@ export class RainbowTableService {
       return null;
     }
 
+    // Check dynamic table first
+    const dynamicMap = this.dynamicEntries.get(hashType);
+    if (dynamicMap) {
+      const original = dynamicMap.get(normalizedHash);
+      if (original) {
+        return { hash: normalizedHash, original, hashType };
+      }
+    }
+
+    // Then check static rainbow table
     const hashMap = this.rainbowTables.get(hashType);
     if (!hashMap) return null;
 
@@ -209,7 +248,9 @@ export class RainbowTableService {
 
   public getStats() {
     const stats: Record<string, number> = {};
+    const dynamicStats: Record<string, number> = {};
     let totalEntries = 0;
+    let totalDynamicEntries = 0;
 
     for (const [type, hashMap] of this.rainbowTables) {
       const size = hashMap.size;
@@ -217,9 +258,17 @@ export class RainbowTableService {
       totalEntries += size;
     }
 
+    for (const [type, dynamicMap] of this.dynamicEntries) {
+      const size = dynamicMap.size;
+      dynamicStats[type] = size;
+      totalDynamicEntries += size;
+    }
+
     return {
       tableStats: stats,
-      totalEntries
+      dynamicStats,
+      totalEntries,
+      totalDynamicEntries
     };
   }
 }

@@ -68,6 +68,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         hashResults
       });
 
+      // Learn the generated hashes for future lookups
+      Object.entries(hashResults).forEach(([hashType, hashValue]) => {
+        if (typeof hashValue === 'string') {
+          rainbowTableService.learnHash(inputText, hashType, hashValue);
+        }
+      });
+
       res.json({ hashResults, operationId: operation.id });
     } catch (error) {
       console.error("Hash generation error:", error);
@@ -121,6 +128,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileName: file.originalname,
         fileSize: file.size.toString(),
         hashResults
+      });
+
+      // Learn the generated hashes for future lookups (using filename as the original)
+      Object.entries(hashResults).forEach(([hashType, hashValue]) => {
+        if (typeof hashValue === 'string') {
+          rainbowTableService.learnHash(file.originalname, hashType, hashValue);
+        }
       });
 
       res.json({ hashResults, operationId: operation.id });
