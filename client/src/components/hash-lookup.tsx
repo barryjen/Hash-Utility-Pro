@@ -66,40 +66,33 @@ export default function HashLookup({ onLookupResult, isLoading, setIsLoading }: 
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-      <div 
-        className="text-white p-4 rounded-t-xl"
-        style={{ backgroundColor: 'var(--hash-warning)' }}
-      >
-        <h2 className="text-xl font-semibold flex items-center">
-          <Search className="mr-2 h-5 w-5" />
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="border-b border-gray-200 p-4">
+        <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+          <Search className="mr-2 h-5 w-5 text-yellow-600" />
           Hash Lookup & Decryption
         </h2>
       </div>
       <div className="p-6">
         <div className="mb-4">
-          <Label className="block font-medium mb-2 flex items-center" style={{ color: 'var(--hash-secondary)' }}>
+          <Label className="block font-medium mb-2 flex items-center text-gray-700">
             <Key className="mr-2 h-4 w-4" />
             Hash to Decrypt
           </Label>
           <Input 
             type="text" 
-            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-2 font-mono text-sm"
-            style={{ 
-              '--tw-ring-color': 'var(--hash-warning)',
-              '--tw-border-color': 'var(--hash-warning)'
-            }}
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm"
             placeholder="Enter hash to lookup..."
             value={lookupHash}
             onChange={(e) => setLookupHash(e.target.value)}
           />
         </div>
         <div className="mb-6">
-          <Label className="block font-medium mb-2" style={{ color: 'var(--hash-secondary)' }}>
+          <Label className="block font-medium mb-2 text-gray-700">
             Hash Type
           </Label>
           <Select value={hashType} onValueChange={setHashType}>
-            <SelectTrigger className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-2 font-mono text-sm">
+            <SelectTrigger className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm">
               <SelectValue placeholder="Select hash type" />
             </SelectTrigger>
             <SelectContent>
@@ -112,8 +105,7 @@ export default function HashLookup({ onLookupResult, isLoading, setIsLoading }: 
           </Select>
         </div>
         <Button 
-          className="w-full font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center text-white"
-          style={{ backgroundColor: 'var(--hash-warning)' }}
+          className="w-full font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center text-white bg-yellow-600 hover:bg-yellow-700"
           onClick={handleLookup}
           disabled={isLoading}
         >

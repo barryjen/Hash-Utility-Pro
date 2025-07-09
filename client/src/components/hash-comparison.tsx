@@ -62,45 +62,34 @@ export default function HashComparison() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-      <div 
-        className="text-white p-4 rounded-t-xl"
-        style={{ backgroundColor: 'var(--hash-secondary)' }}
-      >
-        <h2 className="text-xl font-semibold flex items-center">
-          <Equal className="mr-2 h-5 w-5" />
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="border-b border-gray-200 p-4">
+        <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+          <Equal className="mr-2 h-5 w-5 text-blue-600" />
           Hash Comparison
         </h2>
       </div>
       <div className="p-6">
         <div className="space-y-4">
           <div>
-            <Label className="block font-medium mb-2" style={{ color: 'var(--hash-secondary)' }}>
+            <Label className="block font-medium mb-2 text-gray-700">
               Hash 1
             </Label>
             <Input 
               type="text" 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-2 font-mono text-sm"
-              style={{ 
-                '--tw-ring-color': 'var(--hash-accent)',
-                '--tw-border-color': 'var(--hash-accent)'
-              }}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="Enter first hash..."
               value={hash1}
               onChange={(e) => handleHashChange(e.target.value, 1)}
             />
           </div>
           <div>
-            <Label className="block font-medium mb-2" style={{ color: 'var(--hash-secondary)' }}>
+            <Label className="block font-medium mb-2 text-gray-700">
               Hash 2
             </Label>
             <Input 
               type="text" 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-2 font-mono text-sm"
-              style={{ 
-                '--tw-ring-color': 'var(--hash-accent)',
-                '--tw-border-color': 'var(--hash-accent)'
-              }}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="Enter second hash..."
               value={hash2}
               onChange={(e) => handleHashChange(e.target.value, 2)}
@@ -117,20 +106,14 @@ export default function HashComparison() {
             >
               {comparison ? (
                 <>
-                  <Check 
-                    className="text-xl mr-2"
-                    style={{ color: 'var(--hash-success)' }}
-                  />
-                  <span 
-                    className="font-medium"
-                    style={{ color: 'var(--hash-success)' }}
-                  >
+                  <Check className="text-green-600 h-5 w-5 mr-2" />
+                  <span className="font-medium text-green-700">
                     Hashes Match!
                   </span>
                 </>
               ) : (
                 <>
-                  <X className="text-red-500 text-xl mr-2" />
+                  <X className="text-red-500 h-5 w-5 mr-2" />
                   <span className="text-red-500 font-medium">
                     Hashes Do Not Match
                   </span>

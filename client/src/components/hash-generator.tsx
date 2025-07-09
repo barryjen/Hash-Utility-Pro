@@ -146,29 +146,22 @@ export default function HashGenerator({ onHashGenerated }: HashGeneratorProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-      <div 
-        className="text-white p-4 rounded-t-xl"
-        style={{ backgroundColor: 'var(--hash-primary)' }}
-      >
-        <h2 className="text-xl font-semibold flex items-center">
-          <Settings className="mr-2 h-5 w-5" />
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="border-b border-gray-200 p-4">
+        <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+          <Settings className="mr-2 h-5 w-5" style={{ color: 'var(--hash-accent)' }} />
           Hash Generator
         </h2>
       </div>
       <div className="p-6">
         {/* Text Input */}
         <div className="mb-6">
-          <Label className="block font-medium mb-2 flex items-center" style={{ color: 'var(--hash-secondary)' }}>
+          <Label className="block font-medium mb-2 flex items-center text-gray-700">
             <Keyboard className="mr-2 h-4 w-4" />
             Text Input
           </Label>
           <Textarea 
-            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-2 font-mono text-sm h-32 resize-none"
-            style={{ 
-              '--tw-ring-color': 'var(--hash-accent)',
-              '--tw-border-color': 'var(--hash-accent)'
-            }}
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm h-32 resize-none"
             placeholder="Enter text to hash..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
@@ -177,19 +170,19 @@ export default function HashGenerator({ onHashGenerated }: HashGeneratorProps) {
 
         {/* File Upload */}
         <div className="mb-6">
-          <Label className="block font-medium mb-2 flex items-center" style={{ color: 'var(--hash-secondary)' }}>
+          <Label className="block font-medium mb-2 flex items-center text-gray-700">
             <Upload className="mr-2 h-4 w-4" />
             File Upload
           </Label>
           <div 
-            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
+            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-300 hover:bg-purple-50 transition-colors cursor-pointer"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-gray-500 mb-2">Drag and drop a file here, or click to browse</p>
-            <p className="text-sm text-gray-400">Supports: TXT, PDF, DOC, ZIP, etc.</p>
+            <p className="text-gray-600 mb-2">Drag and drop a file here, or click to browse</p>
+            <p className="text-sm text-gray-500">Supports: TXT, PDF, DOC, ZIP, etc.</p>
             <input 
               ref={fileInputRef}
               type="file" 
@@ -201,7 +194,7 @@ export default function HashGenerator({ onHashGenerated }: HashGeneratorProps) {
 
         {/* Hash Type Selection */}
         <div className="mb-6">
-          <Label className="block font-medium mb-2 flex items-center" style={{ color: 'var(--hash-secondary)' }}>
+          <Label className="block font-medium mb-2 flex items-center text-gray-700">
             <List className="mr-2 h-4 w-4" />
             Hash Types
           </Label>
@@ -215,7 +208,7 @@ export default function HashGenerator({ onHashGenerated }: HashGeneratorProps) {
                 />
                 <Label 
                   htmlFor={type.id}
-                  className="font-mono text-sm cursor-pointer"
+                  className="text-sm cursor-pointer font-medium"
                 >
                   {type.label}
                 </Label>
@@ -226,8 +219,7 @@ export default function HashGenerator({ onHashGenerated }: HashGeneratorProps) {
 
         {/* Generate Button */}
         <Button 
-          className="w-full font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center text-white"
-          style={{ backgroundColor: 'var(--hash-accent)' }}
+          className="w-full font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center text-white bg-purple-600 hover:bg-purple-700"
           onClick={generateHashes}
           disabled={isGenerating}
         >

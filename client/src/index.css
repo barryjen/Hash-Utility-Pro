@@ -25,14 +25,14 @@
   --radius: 0.5rem;
 
   /* Custom hash utility colors */
-  --hash-primary: hsl(210, 22%, 22%);
-  --hash-secondary: hsl(217, 13%, 32%);
-  --hash-accent: hsl(180, 50%, 48%);
-  --hash-bg-light: hsl(210, 40%, 98%);
-  --hash-success: hsl(134, 44%, 60%);
-  --hash-warning: hsl(25, 80%, 58%);
-  --hash-terminal-dark: hsl(0, 0%, 10%);
-  --hash-terminal-green: hsl(120, 100%, 50%);
+  --hash-primary: hsl(220, 13%, 91%);
+  --hash-secondary: hsl(220, 9%, 46%);
+  --hash-accent: hsl(262, 83%, 58%);
+  --hash-bg-light: hsl(0, 0%, 98%);
+  --hash-success: hsl(142, 76%, 36%);
+  --hash-warning: hsl(38, 92%, 50%);
+  --hash-info: hsl(221, 83%, 53%);
+  --hash-card-bg: hsl(0, 0%, 100%);
 }
 
 .dark {
@@ -90,11 +90,11 @@
     background-color: var(--hash-warning);
   }
   
-  .hash-terminal-dark {
-    background-color: var(--hash-terminal-dark);
+  .hash-info {
+    background-color: var(--hash-info);
   }
   
-  .hash-terminal-green {
-    color: var(--hash-terminal-green);
+  .hash-card-bg {
+    background-color: var(--hash-card-bg);
   }
 }
