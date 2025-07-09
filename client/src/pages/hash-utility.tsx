@@ -42,13 +42,6 @@ export default function HashUtility() {
               <Badge variant="secondary" className="bg-purple-100 text-purple-800">
                 v2.0
               </Badge>
-              <Button 
-                variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50"
-              >
-                <HelpCircle className="mr-2 h-4 w-4" />
-                Help
-              </Button>
             </div>
           </div>
         </div>
