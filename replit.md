@@ -42,9 +42,10 @@ Preferred communication style: Simple, everyday language.
 5. **Results Storage**: Persistent storage of hash operations and lookups
 6. **History & Analytics**: Complete dashboard with operation statistics and activity tracking
 7. **Batch Processing**: Process multiple inputs simultaneously with export capabilities
-8. **HMAC Generation**: Hash-based Message Authentication Code with multiple algorithms
-9. **Hash Validation**: Automatic detection and validation of hash formats
-10. **Advanced Security**: Pattern recognition, format validation, and security analysis
+8. **Batch Hash Decoder**: Decode multiple hash values simultaneously with success rate tracking
+9. **HMAC Generation**: Hash-based Message Authentication Code with multiple algorithms
+10. **Hash Validation**: Automatic detection and validation of hash formats
+11. **Advanced Security**: Pattern recognition, format validation, and security analysis
 
 ### UI Components
 - **HashGenerator**: Main interface for text and file hash generation
@@ -53,6 +54,7 @@ Preferred communication style: Simple, everyday language.
 - **HashLookup**: Search interface for hash reverse lookup
 - **HistoryDashboard**: Analytics dashboard with operation statistics and activity timeline
 - **BatchProcessor**: Bulk hash processing with CSV/JSON export capabilities
+- **BatchHashDecoder**: Batch hash decryption with success rate tracking and detailed results
 - **HMACGenerator**: HMAC generation with configurable algorithms and key management
 - **HashValidator**: Hash format detection and validation with detailed analysis
 
@@ -68,9 +70,10 @@ Preferred communication style: Simple, everyday language.
 3. **Hash Comparison**: Two hash inputs → Real-time comparison → Match/no-match indication
 4. **File Processing**: File upload → Hash generation → Storage → Results display
 5. **Batch Processing**: Multiple inputs → Parallel hash generation → Bulk storage → Export functionality
-6. **HMAC Generation**: Message + Secret Key → HMAC algorithm → Authenticated hash output
-7. **Hash Validation**: Hash input → Pattern matching → Format detection → Validation results
-8. **History Analytics**: Stored operations → Statistical analysis → Visual dashboard
+6. **Batch Hash Decoding**: Multiple hashes → Parallel lookup → Success rate calculation → Results export
+7. **HMAC Generation**: Message + Secret Key → HMAC algorithm → Authenticated hash output
+8. **Hash Validation**: Hash input → Pattern matching → Format detection → Validation results
+9. **History Analytics**: Stored operations → Statistical analysis → Visual dashboard
 
 ## External Dependencies
 
@@ -111,12 +114,13 @@ The application follows a modern full-stack architecture with clear separation o
 ## Recent Changes (July 2025)
 
 ### v2.0 - Comprehensive Feature Expansion
-- **Tabbed Interface**: Implemented comprehensive navigation with 6 main feature tabs
+- **Tabbed Interface**: Implemented comprehensive navigation with 7 main feature tabs
 - **History & Analytics Dashboard**: Added complete operation tracking with statistics and timeline
 - **Batch Processing**: Implemented bulk hash generation with CSV/JSON export capabilities
+- **Batch Hash Decoder**: Added bulk hash decryption with success rate tracking and extended hash database
 - **HMAC Generator**: Added Hash-based Message Authentication Code generation with multiple algorithms
 - **Hash Validator**: Implemented automatic hash format detection and validation
 - **Enhanced UI**: Upgraded to "Hash Utility Pro" with modern purple theme and improved UX
-- **Advanced API Endpoints**: Added `/api/hash/history`, `/api/hash/batch`, `/api/hash/hmac`, `/api/hash/validate`
+- **Advanced API Endpoints**: Added `/api/hash/history`, `/api/hash/batch`, `/api/hash/hmac`, `/api/hash/validate`, `/api/hash/batch-lookup`
 - **Export Functionality**: Added data export capabilities for batch results and history
 - **Security Features**: Enhanced validation, pattern matching, and format detection

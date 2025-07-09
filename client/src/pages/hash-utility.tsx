@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, HelpCircle, Hash, History, Layers, Lock, Search, CheckCircle, X, ShieldCheck, Book, Github } from "lucide-react";
+import { Shield, HelpCircle, Hash, History, Layers, Lock, Search, CheckCircle, X, ShieldCheck, Book, Github, Unlock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ import HistoryDashboard from "@/components/history-dashboard";
 import BatchProcessor from "@/components/batch-processor";
 import HMACGenerator from "@/components/hmac-generator";
 import HashValidator from "@/components/hash-validator";
+import BatchHashDecoder from "@/components/batch-hash-decoder";
 
 export default function HashUtility() {
   const [hashResults, setHashResults] = useState<Record<string, string>>({});
@@ -56,7 +57,7 @@ export default function HashUtility() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-8">
+          <TabsList className="grid w-full grid-cols-7 mb-8">
             <TabsTrigger value="generator" className="flex items-center space-x-2">
               <Hash className="h-4 w-4" />
               <span>Generator</span>
@@ -68,6 +69,10 @@ export default function HashUtility() {
             <TabsTrigger value="batch" className="flex items-center space-x-2">
               <Layers className="h-4 w-4" />
               <span>Batch</span>
+            </TabsTrigger>
+            <TabsTrigger value="decoder" className="flex items-center space-x-2">
+              <Unlock className="h-4 w-4" />
+              <span>Decoder</span>
             </TabsTrigger>
             <TabsTrigger value="hmac" className="flex items-center space-x-2">
               <Lock className="h-4 w-4" />
@@ -156,6 +161,10 @@ export default function HashUtility() {
 
           <TabsContent value="batch">
             <BatchProcessor />
+          </TabsContent>
+
+          <TabsContent value="decoder">
+            <BatchHashDecoder />
           </TabsContent>
 
           <TabsContent value="hmac">
