@@ -9,13 +9,31 @@ import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Hash generation endpoint
+  // Hash generation endpoint with validation
   app.post("/api/hash/generate", async (req, res) => {
     try {
       const { inputText, hashTypes } = req.body;
       
-      if (!inputText || !hashTypes || !Array.isArray(hashTypes)) {
-        return res.status(400).json({ error: "Invalid input" });
+      // Input validation
+      if (!inputText || typeof inputText !== 'string') {
+        return res.status(400).json({ error: "Input text is required and must be a string" });
+      }
+      
+      if (inputText.length > 100000) {
+        return res.status(400).json({ error: "Input text too large (max 100KB)" });
+      }
+      
+      if (!hashTypes || !Array.isArray(hashTypes) || hashTypes.length === 0) {
+        return res.status(400).json({ error: "Hash types array is required" });
+      }
+      
+      const validHashTypes = ['md5', 'sha1', 'sha256', 'sha512', 'bcrypt'];
+      const sanitizedHashTypes = hashTypes.filter(type => 
+        typeof type === 'string' && validHashTypes.includes(type.toLowerCase())
+      );
+      
+      if (sanitizedHashTypes.length === 0) {
+        return res.status(400).json({ error: "No valid hash types provided" });
       }
 
       const hashResults: Record<string, string> = {};
@@ -52,18 +70,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ hashResults, operationId: operation.id });
     } catch (error) {
       console.error("Hash generation error:", error);
-      res.status(500).json({ error: "Failed to generate hashes" });
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 
-  // File hash generation endpoint
+  // File hash generation endpoint with validation
   app.post("/api/hash/generate-file", upload.single('file'), async (req, res) => {
     try {
       const file = req.file;
       const { hashTypes } = req.body;
       
-      if (!file || !hashTypes) {
-        return res.status(400).json({ error: "File and hash types required" });
+      if (!file) {
+        return res.status(400).json({ error: "File is required" });
+      }
+      
+      // File size validation (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        return res.status(400).json({ error: "File too large (max 50MB)" });
+      }
+      
+      if (!hashTypes) {
+        return res.status(400).json({ error: "Hash types required" });
       }
 
       const hashTypesArray = JSON.parse(hashTypes);
@@ -102,13 +129,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Hash lookup endpoint
+  // Hash lookup endpoint with validation
   app.post("/api/hash/lookup", async (req, res) => {
     try {
       const { hash, hashType } = req.body;
       
-      if (!hash) {
-        return res.status(400).json({ error: "Hash required" });
+      if (!hash || typeof hash !== 'string') {
+        return res.status(400).json({ error: "Hash is required and must be a string" });
+      }
+      
+      // Validate hash format
+      const hashRegex = /^[a-fA-F0-9]+$/;
+      if (!hashRegex.test(hash)) {
+        return res.status(400).json({ error: "Invalid hash format" });
+      }
+      
+      if (hash.length > 256) {
+        return res.status(400).json({ error: "Hash too long" });
       }
 
       // Simple hash lookup database (in production, this would query actual rainbow tables)
@@ -193,13 +230,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Batch hash generation
+  // Batch hash generation with validation
   app.post("/api/hash/batch", async (req, res) => {
     try {
       const { inputs, hashTypes } = req.body;
       
-      if (!inputs || !Array.isArray(inputs) || !hashTypes || !Array.isArray(hashTypes)) {
-        return res.status(400).json({ error: "Invalid inputs or hash types" });
+      if (!inputs || !Array.isArray(inputs)) {
+        return res.status(400).json({ error: "Inputs array is required" });
+      }
+      
+      if (inputs.length > 100) {
+        return res.status(400).json({ error: "Too many inputs (max 100)" });
+      }
+      
+      if (!hashTypes || !Array.isArray(hashTypes)) {
+        return res.status(400).json({ error: "Hash types array is required" });
+      }
+      
+      // Validate each input
+      for (const input of inputs) {
+        if (typeof input !== 'string' || input.length > 10000) {
+          return res.status(400).json({ error: "Each input must be a string under 10KB" });
+        }
       }
 
       const results = [];
