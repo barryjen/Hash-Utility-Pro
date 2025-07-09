@@ -57,8 +57,11 @@ export class MemStorage implements IStorage {
   async createHashOperation(operation: InsertHashOperation): Promise<HashOperation> {
     const id = this.currentHashOperationId++;
     const hashOperation: HashOperation = { 
-      ...operation, 
       id,
+      inputText: operation.inputText || null,
+      fileName: operation.fileName || null,
+      fileSize: operation.fileSize || null,
+      hashResults: operation.hashResults || null,
       timestamp: new Date()
     };
     this.hashOperations.set(id, hashOperation);
@@ -72,8 +75,11 @@ export class MemStorage implements IStorage {
   async createHashLookup(lookup: InsertHashLookup): Promise<HashLookup> {
     const id = this.currentHashLookupId++;
     const hashLookup: HashLookup = { 
-      ...lookup, 
       id,
+      hash: lookup.hash,
+      hashType: lookup.hashType,
+      originalValue: lookup.originalValue || null,
+      found: lookup.found || "false",
       timestamp: new Date()
     };
     this.hashLookups.set(id, hashLookup);
