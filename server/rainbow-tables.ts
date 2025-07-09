@@ -17,7 +17,7 @@ export class RainbowTableService {
   }
 
   private initializeRainbowTables() {
-    // Common passwords and phrases for rainbow table
+    // Comprehensive wordlist for rainbow table
     const commonPasswords = [
       "", "password", "123456", "123456789", "12345678", "12345", "1234567",
       "password123", "admin", "qwerty", "abc123", "Password1", "welcome",
@@ -52,15 +52,108 @@ export class RainbowTableService {
       "admin123", "root123", "password1", "password12", "password123", "123password"
     ];
 
-    // Generate numeric sequences
-    for (let i = 0; i <= 999999; i++) {
+    // Add more comprehensive dictionary words
+    const extendedWords = [
+      // Technology terms
+      "computer", "internet", "software", "hardware", "network", "database",
+      "server", "client", "security", "encryption", "hash", "algorithm",
+      "programming", "coding", "development", "website", "application",
+      "system", "technology", "digital", "cyber", "virtual", "online",
+      
+      // Common names
+      "john", "jane", "michael", "sarah", "david", "maria", "robert", "lisa",
+      "james", "jennifer", "william", "elizabeth", "richard", "patricia",
+      "charles", "barbara", "joseph", "susan", "thomas", "jessica",
+      "christopher", "margaret", "daniel", "dorothy", "matthew", "helen",
+      "anthony", "nancy", "mark", "betty", "donald", "sandra", "steven",
+      "donna", "paul", "carol", "andrew", "ruth", "kenneth", "sharon",
+      
+      // Extended common passwords from breaches
+      "football", "baseball", "basketball", "soccer", "tennis", "golf",
+      "swimming", "running", "dancing", "music", "guitar", "piano",
+      "singing", "reading", "writing", "cooking", "eating", "sleeping",
+      "working", "playing", "learning", "teaching", "helping", "caring",
+      "sharing", "giving", "taking", "making", "breaking", "fixing",
+      "building", "creating", "destroying", "opening", "closing", "starting",
+      "stopping", "moving", "staying", "going", "coming", "leaving",
+      "arriving", "departing", "entering", "exiting", "walking", "running",
+      
+      // Tech companies and brands
+      "google", "microsoft", "apple", "amazon", "facebook", "twitter",
+      "instagram", "linkedin", "youtube", "netflix", "spotify", "adobe",
+      "oracle", "ibm", "intel", "nvidia", "samsung", "sony", "tesla",
+      "uber", "airbnb", "paypal", "ebay", "walmart", "target", "costco",
+      
+      // Single characters and short combinations
+      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+      "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+      "aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj", "kk",
+      "ll", "mm", "nn", "oo", "pp", "qq", "rr", "ss", "tt", "uu", "vv",
+      "ww", "xx", "yy", "zz", "aaa", "bbb", "ccc", "ddd", "eee", "fff",
+      
+      // Special characters and symbols combinations
+      "!!!", "???", "@@@", "###", "$$$", "%%%", "^^^", "&&&", "***",
+      "(()", ")))", "___", "+++", "===", "---", "|||", "\\\\\\", "///",
+      "<<<", ">>>", "~~~", "```", "...", ",,,"
+    ];
+    
+    commonPasswords.push(...extendedWords);
+
+    // Generate comprehensive numeric sequences
+    for (let i = 0; i <= 9999999; i++) {
       commonPasswords.push(i.toString());
+      if (i <= 99999) {
+        commonPasswords.push(i.toString().padStart(5, '0'));
+      }
       if (i <= 9999) {
         commonPasswords.push(i.toString().padStart(4, '0'));
       }
       if (i <= 999) {
         commonPasswords.push(i.toString().padStart(3, '0'));
       }
+      if (i <= 99) {
+        commonPasswords.push(i.toString().padStart(2, '0'));
+      }
+    }
+
+    // Generate hexadecimal sequences
+    for (let i = 0; i <= 65535; i++) {
+      commonPasswords.push(i.toString(16));
+      commonPasswords.push(i.toString(16).toUpperCase());
+      if (i <= 255) {
+        commonPasswords.push(i.toString(16).padStart(2, '0'));
+        commonPasswords.push(i.toString(16).toUpperCase().padStart(2, '0'));
+      }
+    }
+
+    // Generate alphabet combinations
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    // Single letters
+    for (const char of alphabet) {
+      commonPasswords.push(char);
+      commonPasswords.push(char.toUpperCase());
+    }
+    
+    // Two letter combinations (limited to reduce size)
+    for (let i = 0; i < alphabet.length; i++) {
+      for (let j = 0; j < alphabet.length; j++) {
+        if (i <= 5 && j <= 5) { // Limit to reduce computation
+          commonPasswords.push(alphabet[i] + alphabet[j]);
+          commonPasswords.push((alphabet[i] + alphabet[j]).toUpperCase());
+        }
+      }
+    }
+
+    // Mixed alphanumeric patterns
+    for (let i = 0; i <= 9999; i++) {
+      commonPasswords.push(`a${i}`);
+      commonPasswords.push(`A${i}`);
+      commonPasswords.push(`${i}a`);
+      commonPasswords.push(`${i}A`);
+      commonPasswords.push(`test${i}`);
+      commonPasswords.push(`user${i}`);
+      commonPasswords.push(`pass${i}`);
+      commonPasswords.push(`admin${i}`);
     }
 
     // Generate common keyboard patterns
@@ -93,6 +186,38 @@ export class RainbowTableService {
         }
       }
     }
+
+    // Generate common variations for existing words
+    const variations = [];
+    const baseWords = [...commonPasswords];
+    
+    for (const word of baseWords.slice(0, 500)) { // Limit to first 500 to avoid exponential growth
+      if (typeof word === 'string' && word.length > 2 && word.length < 20) {
+        // Case variations
+        variations.push(word.toLowerCase());
+        variations.push(word.toUpperCase());
+        variations.push(word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+        
+        // Leetspeak substitutions
+        let leet = word.toLowerCase();
+        leet = leet.replace(/a/g, '4').replace(/e/g, '3').replace(/i/g, '1')
+                  .replace(/o/g, '0').replace(/s/g, '5').replace(/t/g, '7');
+        variations.push(leet);
+        
+        // Add common suffixes
+        variations.push(word + '!');
+        variations.push(word + '123');
+        variations.push(word + '1');
+        variations.push(word + '2024');
+        variations.push('123' + word);
+        variations.push('!' + word);
+        
+        // Reverse
+        variations.push(word.split('').reverse().join(''));
+      }
+    }
+    
+    commonPasswords.push(...variations);
 
     // Generate hash tables for each algorithm
     this.generateHashTable('md5', commonPasswords);
