@@ -172,6 +172,148 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get hash operations history
+  app.get("/api/hash/history", async (req, res) => {
+    try {
+      const operations = await storage.getHashOperations();
+      const lookups = await storage.getHashLookups();
+      
+      res.json({
+        operations: operations.reverse(), // Most recent first
+        lookups: lookups.reverse(),
+        stats: {
+          totalOperations: operations.length,
+          totalLookups: lookups.length,
+          successfulLookups: lookups.filter(l => l.found === "true").length
+        }
+      });
+    } catch (error) {
+      console.error("History fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch history" });
+    }
+  });
+
+  // Batch hash generation
+  app.post("/api/hash/batch", async (req, res) => {
+    try {
+      const { inputs, hashTypes } = req.body;
+      
+      if (!inputs || !Array.isArray(inputs) || !hashTypes || !Array.isArray(hashTypes)) {
+        return res.status(400).json({ error: "Invalid inputs or hash types" });
+      }
+
+      const results = [];
+      
+      for (const input of inputs) {
+        const hashResults: Record<string, string> = {};
+        
+        for (const hashType of hashTypes) {
+          switch (hashType.toLowerCase()) {
+            case 'md5':
+              hashResults.md5 = crypto.createHash('md5').update(input).digest('hex');
+              break;
+            case 'sha1':
+              hashResults.sha1 = crypto.createHash('sha1').update(input).digest('hex');
+              break;
+            case 'sha256':
+              hashResults.sha256 = crypto.createHash('sha256').update(input).digest('hex');
+              break;
+            case 'sha512':
+              hashResults.sha512 = crypto.createHash('sha512').update(input).digest('hex');
+              break;
+            case 'bcrypt':
+              hashResults.bcrypt = await bcrypt.hash(input, 10);
+              break;
+            default:
+              break;
+          }
+        }
+
+        const operation = await storage.createHashOperation({
+          inputText: input,
+          fileName: null,
+          fileSize: null,
+          hashResults
+        });
+
+        results.push({
+          input,
+          hashes: hashResults,
+          operationId: operation.id
+        });
+      }
+
+      res.json({ results });
+    } catch (error) {
+      console.error("Batch hash generation error:", error);
+      res.status(500).json({ error: "Failed to generate batch hashes" });
+    }
+  });
+
+  // HMAC generation
+  app.post("/api/hash/hmac", async (req, res) => {
+    try {
+      const { message, key, algorithm = 'sha256' } = req.body;
+      
+      if (!message || !key) {
+        return res.status(400).json({ error: "Message and key are required" });
+      }
+
+      const hmac = crypto.createHmac(algorithm, key).update(message).digest('hex');
+      
+      res.json({ hmac, algorithm, message, keyLength: key.length });
+    } catch (error) {
+      console.error("HMAC generation error:", error);
+      res.status(500).json({ error: "Failed to generate HMAC" });
+    }
+  });
+
+  // Hash validation
+  app.post("/api/hash/validate", async (req, res) => {
+    try {
+      const { hash, type } = req.body;
+      
+      if (!hash) {
+        return res.status(400).json({ error: "Hash is required" });
+      }
+
+      const patterns = {
+        md5: /^[a-f0-9]{32}$/i,
+        sha1: /^[a-f0-9]{40}$/i,
+        sha256: /^[a-f0-9]{64}$/i,
+        sha512: /^[a-f0-9]{128}$/i,
+        bcrypt: /^\$2[ayb]\$[0-9]{2}\$[A-Za-z0-9\.\/]{53}$/
+      };
+
+      let detectedType = 'unknown';
+      let isValid = false;
+
+      if (type && patterns[type as keyof typeof patterns]) {
+        isValid = patterns[type as keyof typeof patterns].test(hash);
+        detectedType = type;
+      } else {
+        // Auto-detect hash type
+        for (const [hashType, pattern] of Object.entries(patterns)) {
+          if (pattern.test(hash)) {
+            detectedType = hashType;
+            isValid = true;
+            break;
+          }
+        }
+      }
+
+      res.json({ 
+        valid: isValid, 
+        detectedType, 
+        length: hash.length,
+        format: isValid ? 'valid' : 'invalid'
+      });
+    } catch (error) {
+      console.error("Hash validation error:", error);
+      res.status(500).json({ error: "Failed to validate hash" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
