@@ -44,12 +44,12 @@ export default function HashLookup({ onLookupResult, isLoading, setIsLoading }: 
       if (data.found) {
         toast({
           title: "Success",
-          description: "Hash found in database!",
+          description: "Hash found in rainbow tables!",
         });
       } else {
         toast({
           title: "Info",
-          description: "Hash not found in database",
+          description: "Hash not found in rainbow tables",
         });
       }
     } catch (error) {
@@ -70,7 +70,7 @@ export default function HashLookup({ onLookupResult, isLoading, setIsLoading }: 
       <div className="border-b border-gray-200 p-4">
         <h2 className="text-lg font-semibold text-gray-900 flex items-center">
           <Search className="mr-2 h-5 w-5 text-yellow-600" />
-          Hash Lookup & Decryption
+          Hash Lookup & Decryption (Rainbow Tables)
         </h2>
       </div>
       <div className="p-6">
@@ -82,7 +82,7 @@ export default function HashLookup({ onLookupResult, isLoading, setIsLoading }: 
           <Input 
             type="text" 
             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm"
-            placeholder="Enter hash to lookup..."
+            placeholder="Enter hash to lookup using rainbow tables..."
             value={lookupHash}
             onChange={(e) => setLookupHash(e.target.value)}
           />

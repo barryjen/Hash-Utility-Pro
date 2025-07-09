@@ -36,10 +36,18 @@ interface HistoryData {
 }
 
 export default function HistoryDashboard() {
+  const [rainbowStats, setRainbowStats] = useState(null);
   const { data: historyData, isLoading } = useQuery<HistoryData>({
     queryKey: ['/api/hash/history'],
     queryFn: getQueryFn({ on401: "throw" })
   });
+
+  useEffect(() => {
+    fetch('/api/rainbow/stats')
+      .then(res => res.json())
+      .then(data => setRainbowStats(data))
+      .catch(error => console.error("Error fetching rainbow table stats:", error));
+  }, []);
 
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
@@ -80,44 +88,79 @@ export default function HistoryDashboard() {
   return (
     <div className="space-y-6">
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Operations</CardTitle>
-            <Code className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{historyData.stats.totalOperations}</div>
-            <p className="text-xs text-muted-foreground">Hash generations</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Lookups</CardTitle>
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{historyData.stats.totalLookups}</div>
-            <p className="text-xs text-muted-foreground">Hash searches</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {historyData.stats.totalLookups > 0 
-                ? Math.round((historyData.stats.successfulLookups / historyData.stats.totalLookups) * 100)
-                : 0}%
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Operations</p>
+                <p className="text-2xl font-bold text-blue-600">{historyData.stats.totalOperations}</p>
+              </div>
+              <Code className="h-8 w-8 text-blue-600" />
             </div>
-            <p className="text-xs text-muted-foreground">Successful lookups</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Lookups</p>
+                <p className="text-2xl font-bold text-yellow-600">{historyData.stats.totalLookups}</p>
+              </div>
+              <Search className="h-8 w-8 text-yellow-600" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Success Rate</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {historyData.stats.totalLookups > 0 
+                    ? Math.round((historyData.stats.successfulLookups / historyData.stats.totalLookups) * 100)
+                    : 0}%
+                </p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Rainbow Table Entries</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {rainbowStats ? rainbowStats.totalEntries.toLocaleString() : '0'}
+                </p>
+              </div>
+              <Database className="h-8 w-8 text-purple-600" />
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      {rainbowStats && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Database className="mr-2 h-5 w-5 text-purple-600" />
+              Rainbow Table Statistics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {Object.entries(rainbowStats.tableStats).map(([hashType, count]) => (
+                <div key={hashType} className="text-center p-3 bg-gray-50 rounded-lg">
+                  <p className="text-sm font-medium text-gray-600 uppercase">{hashType}</p>
+                  <p className="text-xl font-bold text-purple-600">{count.toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* History Tabs */}
       <Card>
@@ -133,7 +176,7 @@ export default function HistoryDashboard() {
               <TabsTrigger value="operations">Hash Operations</TabsTrigger>
               <TabsTrigger value="lookups">Hash Lookups</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="operations" className="mt-4">
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {historyData.operations.length === 0 ? (
@@ -174,7 +217,7 @@ export default function HistoryDashboard() {
                 )}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="lookups" className="mt-4">
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {historyData.lookups.length === 0 ? (
