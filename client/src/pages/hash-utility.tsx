@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, HelpCircle, Hash, History, Layers, Lock, Search, CheckCircle, X, ShieldCheck, Book, Github, Unlock } from "lucide-react";
+import { Shield, HelpCircle, Hash, History, Layers, Lock, Search, CheckCircle, X, Unlock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -184,29 +184,9 @@ export default function HashUtility() {
       {/* Footer */}
       <footer className="py-8 mt-12 bg-gray-100 border-t">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-center items-center">
+            <div>
               <p className="text-sm text-gray-600">© 2025 Hash Utility Pro</p>
-            </div>
-            <div className="flex items-center space-x-6">
-              <a 
-                href="#" 
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors flex items-center"
-              >
-                <Shield className="mr-1 h-4 w-4" />Security
-              </a>
-              <a 
-                href="#" 
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors flex items-center"
-              >
-                <Book className="mr-1 h-4 w-4" />Documentation
-              </a>
-              <a 
-                href="#" 
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors flex items-center"
-              >
-                <Github className="mr-1 h-4 w-4" />GitHub
-              </a>
             </div>
           </div>
         </div>
